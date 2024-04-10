@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1712701676 source:c:\users\cicer\onedrive\documentos\ciência da computação\estrutura de dados\trabalho\descriptografar\avl.c
+	<stdio.h>
+	<stdlib.h>
+	"avl.h"
+
+1712701689 c:\users\cicer\onedrive\documentos\ciência da computação\estrutura de dados\trabalho\descriptografar\avl.h
+
