@@ -94,6 +94,19 @@ void descer(Heap *heap, int pos, int tam)
             filho_dir = filho_esq;
         }
 
+        printf("\nFilho E: %d", filho_esq);
+        printf("\nFilho D: %d", filho_dir);
+        // printf("\nFilho Esquerdo: %d", heap->prioridade[filho_esq].urgencia);
+        // printf("\nFilho Esquerdo: %d", heap->prioridade[filho_esq].hora);
+        // printf("\nFilho Esquerdo: %d", heap->prioridade[filho_esq].minuto);
+        // printf("\nFilho Esquerdo: %d", heap->prioridade[filho_esq].segundo);
+        // printf("\nFilho Direito: %d", heap->prioridade[filho_dir].urgencia);
+        // printf("\nFilho Direito: %d", heap->prioridade[filho_dir].hora);
+        // printf("\nFilho Direito: %d", heap->prioridade[filho_dir].minuto);
+        // printf("\nFilho Direito: %d", heap->prioridade[filho_dir].segundo);
+
+        printf("\n\n");
+
         // Verica qual filho tem mais prioridade
         if (heap->prioridade[filho_esq].urgencia < heap->prioridade[filho_dir].urgencia)
         {
@@ -117,13 +130,38 @@ void descer(Heap *heap, int pos, int tam)
                     {
                         filho = filho_esq;
                     }
+                    else
+                    {
+                        filho = filho_dir;
+                    }
                 }
+                else
+                {
+                    filho = filho_dir;
+                }
+            }
+            else
+            {
+                filho = filho_dir;
             }
         }
         else
         {
             filho = filho_dir;
         }
+
+        printf("\nPai: %d", pai);
+        printf("\nFilho: %d", filho);
+
+        // printf("\nPai: %d", heap->prioridade[pai].urgencia);
+        // printf("\nPai: %d", heap->prioridade[pai].hora);
+        // printf("\nPai: %d", heap->prioridade[pai].minuto);
+        // printf("\nPai: %d", heap->prioridade[pai].segundo);
+        // printf("\nFilho: %d", heap->prioridade[filho].urgencia);
+        // printf("\nFilho: %d", heap->prioridade[filho].hora);
+        // printf("\nFilho: %d", heap->prioridade[filho].minuto);
+        // printf("\nFilho: %d", heap->prioridade[filho].segundo);
+        break;
 
         // Troca do filho e pai, caso o filho tenha mais prioridade que o pai
         if (heap->prioridade[pai].urgencia > heap->prioridade[filho].urgencia)
@@ -187,10 +225,11 @@ int removeHeap(Heap *heap)
 
     if (heap->posicao > 0)
     {
+        printf("\nNome: %s", heap->prioridade[0].nome);
         printf("\nUrgencia: %d", heap->prioridade[0].urgencia);
         printf("\nHora: %d", heap->prioridade[0].hora);
         printf("\nminuto: %d", heap->prioridade[0].minuto);
-        printf("\nsegundo: %d", heap->prioridade[0].segundo);
+        printf("\nsegundo: %d\n\n", heap->prioridade[0].segundo);
         heap->prioridade[0] = heap->prioridade[heap->posicao - 1];
         heap->posicao--;
         descer(heap, 0, heap->posicao);
@@ -199,4 +238,7 @@ int removeHeap(Heap *heap)
     return 0;
 };
 
-int deletaHeap(Heap *);
+int deletaHeap(Heap *heap)
+{
+    free(heap);
+};
