@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1712806710 source:c:\users\cicer\onedrive\documentos\ciência da computação\estrutura de dados\trabalho\hospital\main.c
+1712840674 source:c:\users\cicer\onedrive\documentos\ciência da computação\estrutura de dados\trabalho\hospital\main.c
 	<stdio.h>
 	<stdlib.h>
 	"heap.h"
 
 1712801002 c:\users\cicer\onedrive\documentos\ciência da computação\estrutura de dados\trabalho\hospital\heap.h
 
-1712806235 source:c:\users\cicer\onedrive\documentos\ciência da computação\estrutura de dados\trabalho\hospital\heap.c
+1712840715 source:c:\users\cicer\onedrive\documentos\ciência da computação\estrutura de dados\trabalho\hospital\heap.c
 	<stdio.h>
 	<stdlib.h>
 	"heap.h"
