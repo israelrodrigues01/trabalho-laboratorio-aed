@@ -2,176 +2,209 @@
 #include <stdlib.h>
 #include "avl.h"
 
-struct NO{
-    int info;
+struct NO
+{
+    int valor;
+    char letra;
+    int type;
     int altura;
     struct NO *esq;
     struct NO *dir;
 };
 
-ArvAVL* cria_ArvAVL(){
-    ArvAVL* raiz = (ArvAVL*) malloc(sizeof(ArvAVL));
-    if(raiz != NULL)
+typedef struct NO No;
+
+AVL *criaAVL()
+{
+    AVL *raiz = (AVL *)malloc(sizeof(AVL));
+    if (raiz != NULL)
+    {
         *raiz = NULL;
+    }
+
     return raiz;
 }
 
-void libera_NO(struct NO* no){
-    if(no == NULL)
-        return;
-    libera_NO(no->esq);
-    libera_NO(no->dir);
+int deletaNOAVL(No *no)
+{
+    if (vaziaAVL(no))
+    {
+        return -1;
+    }
+
+    deletaNOAVL(no->esq);
+    deletaNOAVL(no->dir);
     free(no);
     no = NULL;
+    return 0;
 }
 
-void libera_ArvAVL(ArvAVL* raiz){
-    if(raiz == NULL)
-        return;
-    libera_NO(*raiz);//libera cada nó
-    free(raiz);//libera a raiz
-}
-
-int altura_NO(struct NO* no){
-    if(no == NULL)
+int deletarAVL(AVL *raiz)
+{
+    if (vaziaAVL(raiz))
+    {
         return -1;
-    else
+    }
+
+    deletaNOAVL(*raiz);
+    free(raiz);
+
+    return 0;
+}
+
+int alturaNoAVL(No *no)
+{
+    if (vaziaAVL(no))
+    {
+        return -1;
+    }
+
     return no->altura;
 }
 
-int fatorBalanceamento_NO(struct NO* no){
-    return labs(altura_NO(no->esq) - altura_NO(no->dir));
+int balanceamentoAVL(No *no)
+{
+    return labs(alturaNoAVL(no->esq) - alturaNoAVL(no->dir)); // Labs retorna o valor abosluto, como um mÃ³dulo de X
 }
 
-int maior(int x, int y){
-    if(x > y)
+int maior(int x, int y)
+{
+    if (x > y)
+    {
         return x;
-    else
-        return y;
+    }
+
+    return y;
 }
 
-int estaVazia_ArvAVL(ArvAVL *raiz){
-    if(raiz == NULL)
+int vaziaAVL(AVL *raiz)
+{
+    if (raiz == NULL || *raiz == NULL)
+    {
         return 1;
-    if(*raiz == NULL)
-        return 1;
+    }
+
     return 0;
 }
 
-int totalNO_ArvAVL(ArvAVL *raiz){
-    if (raiz == NULL)
-        return 0;
-    if (*raiz == NULL)
-        return 0;
-    int alt_esq = totalNO_ArvAVL(&((*raiz)->esq));
-    int alt_dir = totalNO_ArvAVL(&((*raiz)->dir));
-    return(alt_esq + alt_dir + 1);
+int qtdNoAVL(AVL *raiz)
+{
+    if (vaziaAVL(raiz))
+    {
+        return -1;
+    }
+
+    int alt_esq = qtdNoAVL(&((*raiz)->esq));
+    int alt_dir = qtdNoAVL(&((*raiz)->dir));
+    return (alt_esq + alt_dir + 1);
 }
 
-int altura_ArvAVL(ArvAVL *raiz){
-    if (raiz == NULL)
-        return 0;
-    if (*raiz == NULL)
-        return 0;
-    int alt_esq = altura_ArvAVL(&((*raiz)->esq));
-    int alt_dir = altura_ArvAVL(&((*raiz)->dir));
+int alturaAVL(AVL *raiz)
+{
+    if (vaziaAVL(raiz))
+    {
+        return -1;
+    }
+
+    int alt_esq = alturaAVL(&((*raiz)->esq));
+    int alt_dir = alturaAVL(&((*raiz)->dir));
+
     if (alt_esq > alt_dir)
+    {
         return (alt_esq + 1);
-    else
-        return(alt_dir + 1);
+    }
+
+    return (alt_dir + 1);
 }
 
-void preOrdem_ArvAVL(ArvAVL *raiz){
-    if(raiz == NULL)
-        return;
-    if(*raiz != NULL){
-        //printf("%d\n",(*raiz)->info);
-        //printf("No %d: %d\n",(*raiz)->info,fatorBalanceamento_NO(*raiz));
-        printf("No %d: %d\n",(*raiz)->info,altura_NO(*raiz));
-        preOrdem_ArvAVL(&((*raiz)->esq));
-        preOrdem_ArvAVL(&((*raiz)->dir));
+int preOrdemAVL(AVL *raiz)
+{
+    if (vaziaAVL(raiz))
+    {
+        return -1;
     }
-}
 
-void emOrdem_ArvAVL(ArvAVL *raiz){
-    if(raiz == NULL)
-        return;
-    if(*raiz != NULL){
-        emOrdem_ArvAVL(&((*raiz)->esq));
-        //printf("%d\n",(*raiz)->info);
-        printf("No %d: H(%d) fb(%d)\n",(*raiz)->info,altura_NO(*raiz),fatorBalanceamento_NO(*raiz));
-        emOrdem_ArvAVL(&((*raiz)->dir));
-    }
-}
+    printf("%c", (*raiz)->letra);
+    preOrdemAVL(&((*raiz)->esq));
+    preOrdemAVL(&((*raiz)->dir));
 
-void posOrdem_ArvAVL(ArvAVL *raiz){
-    if(raiz == NULL)
-        return;
-    if(*raiz != NULL){
-        posOrdem_ArvAVL(&((*raiz)->esq));
-        posOrdem_ArvAVL(&((*raiz)->dir));
-        printf("%d\n",(*raiz)->info);
-    }
-}
-
-int consulta_ArvAVL(ArvAVL *raiz, int valor){
-    if(raiz == NULL)
-        return 0;
-    struct NO* atual = *raiz;
-    while(atual != NULL){
-        if(valor == atual->info){
-            return 1;
-        }
-        if(valor > atual->info)
-            atual = atual->dir;
-        else
-            atual = atual->esq;
-    }
     return 0;
 }
 
-//=================================
-void RotacaoLL(ArvAVL *A){//LL
-    printf("RotacaoLL\n");
-    struct NO *B;
+int ordemSimetricaAVL(AVL *raiz)
+{
+    if (vaziaAVL(raiz))
+    {
+        return -1;
+    }
+    ordemSimetricaAVL(&((*raiz)->esq));
+    printf("%c", (*raiz)->letra);
+    ordemSimetricaAVL(&((*raiz)->dir));
+
+    return 0;
+}
+
+int posOrdemAVL(AVL *raiz)
+{
+    if (vaziaAVL(raiz))
+    {
+        return -1;
+    }
+
+    posOrdemAVL(&((*raiz)->esq));
+    posOrdemAVL(&((*raiz)->dir));
+    printf("%c", (*raiz)->letra);
+
+    return 0;
+}
+
+void rotacaoLL(AVL *A)
+{
+    No *B;
     B = (*A)->esq;
     (*A)->esq = B->dir;
     B->dir = *A;
-    (*A)->altura = maior(altura_NO((*A)->esq),altura_NO((*A)->dir)) + 1;
-    B->altura = maior(altura_NO(B->esq),(*A)->altura) + 1;
+    (*A)->altura = maior(alturaNoAVL((*A)->esq), alturaNoAVL((*A)->dir)) + 1;
+    B->altura = maior(alturaNoAVL(B->esq), (*A)->altura) + 1;
     *A = B;
 }
 
-void RotacaoRR(ArvAVL *A){//RR
-    printf("RotacaoRR\n");
-    struct NO *B;
+void rotacaoRR(AVL *A)
+{
+    No *B;
     B = (*A)->dir;
     (*A)->dir = B->esq;
     B->esq = (*A);
-    (*A)->altura = maior(altura_NO((*A)->esq),altura_NO((*A)->dir)) + 1;
-    B->altura = maior(altura_NO(B->dir),(*A)->altura) + 1;
+    (*A)->altura = maior(alturaNoAVL((*A)->esq), alturaNoAVL((*A)->dir)) + 1;
+    B->altura = maior(alturaNoAVL(B->dir), (*A)->altura) + 1;
     (*A) = B;
 }
 
-void RotacaoLR(ArvAVL *A){//LR
-    RotacaoRR(&(*A)->esq);
-    RotacaoLL(A);
+void rotacaoLR(AVL *A)
+{
+    rotacaoRR(&(*A)->esq);
+    rotacaoLL(A);
 }
 
-void RotacaoRL(ArvAVL *A){//RL
-    RotacaoLL(&(*A)->dir);
-    RotacaoRR(A);
+void rotacaoRL(AVL *A)
+{
+
+    rotacaoLL(&(*A)->dir);
+    rotacaoRR(A);
 }
 
-int insere_ArvAVL(ArvAVL *raiz, int valor){
+int insereAVL(AVL *raiz, int valor, char letra)
+{
     int res;
-    if(*raiz == NULL){//árvore vazia ou nó folha
-        struct NO *novo;
-        novo = (struct NO*)malloc(sizeof(struct NO));
-        if(novo == NULL)
+    if (vaziaAVL(raiz))
+    {
+        No *novo;
+        novo = (No *)malloc(sizeof(No));
+        if (novo == NULL)
             return 0;
 
-        novo->info = valor;
+        novo->valor = valor;
+        novo->letra = letra;
         novo->altura = 0;
         novo->esq = NULL;
         novo->dir = NULL;
@@ -179,103 +212,133 @@ int insere_ArvAVL(ArvAVL *raiz, int valor){
         return 1;
     }
 
-    struct NO *atual = *raiz;
-    if(valor < atual->info){
-        if((res = insere_ArvAVL(&(atual->esq), valor)) == 1){
-            if(fatorBalanceamento_NO(atual) >= 2){
-                if(valor < (*raiz)->esq->info ){
-                    RotacaoLL(raiz);
-                }else{
-                    RotacaoLR(raiz);
+    No *atual = *raiz;
+    if (valor < atual->valor)
+    {
+        if ((res = insereAVL(&(atual->esq), valor, letra)) == 1)
+        {
+            if (balanceamentoAVL(atual) >= 2)
+            {
+                if (valor < (*raiz)->esq->valor)
+                {
+                    rotacaoLL(raiz);
+                }
+                else
+                {
+                    rotacaoLR(raiz);
                 }
             }
         }
-    }else{
-        if(valor > atual->info){
-            if((res = insere_ArvAVL(&(atual->dir), valor)) == 1){
-                if(fatorBalanceamento_NO(atual) >= 2){
-                    if((*raiz)->dir->info < valor){
-                        RotacaoRR(raiz);
-                    }else{
-                        RotacaoRL(raiz);
+    }
+    else
+    {
+        if (valor > atual->valor)
+        {
+            if ((res = insereAVL(&(atual->dir), valor, letra)) == 1)
+            {
+                if (balanceamentoAVL(atual) >= 2)
+                {
+                    if ((*raiz)->dir->valor < valor)
+                    {
+                        rotacaoRR(raiz);
+                    }
+                    else
+                    {
+                        rotacaoRL(raiz);
                     }
                 }
             }
-        }else{
+        }
+        else
+        {
             printf("Valor duplicado!!\n");
             return 0;
         }
     }
 
-    atual->altura = maior(altura_NO(atual->esq),altura_NO(atual->dir)) + 1;
+    atual->altura = maior(alturaNoAVL(atual->esq), alturaNoAVL(atual->dir)) + 1;
 
     return res;
 }
 
-struct NO* procuraMenor(struct NO* atual){
-    struct NO *no1 = atual;
-    struct NO *no2 = atual->esq;
-    while(no2 != NULL){
+No *procuraMenor(No *atual)
+{
+    No *no1 = atual;
+    No *no2 = atual->esq;
+    while (no2 != NULL)
+    {
         no1 = no2;
         no2 = no2->esq;
     }
     return no1;
 }
 
-int remove_ArvAVL(ArvAVL *raiz, int valor){
-	if(*raiz == NULL){// valor não existe
-	    printf("valor não existe!!\n");
-	    return 0;
-	}
+int removeAVL(AVL *raiz, int valor)
+{
+    if (vaziaAVL(raiz))
+    {
+        return -1;
+    }
 
     int res;
-	if(valor < (*raiz)->info){
-	    if((res = remove_ArvAVL(&(*raiz)->esq,valor)) == 1){
-            if(fatorBalanceamento_NO(*raiz) >= 2){
-                if(altura_NO((*raiz)->dir->esq) <= altura_NO((*raiz)->dir->dir))
-                    RotacaoRR(raiz);
+    if (valor < (*raiz)->valor)
+    {
+        if ((res = removeAVL(&(*raiz)->esq, valor)) == 1)
+        {
+            if (balanceamentoAVL(*raiz) >= 2)
+            {
+                if (alturaNoAVL((*raiz)->dir->esq) <= alturaNoAVL((*raiz)->dir->dir))
+                    rotacaoRR(raiz);
                 else
-                    RotacaoRL(raiz);
+                    rotacaoRL(raiz);
             }
-	    }
-	}
+        }
+    }
 
-	if((*raiz)->info < valor){
-	    if((res = remove_ArvAVL(&(*raiz)->dir, valor)) == 1){
-            if(fatorBalanceamento_NO(*raiz) >= 2){
-                if(altura_NO((*raiz)->esq->dir) <= altura_NO((*raiz)->esq->esq) )
-                    RotacaoLL(raiz);
+    if ((*raiz)->valor < valor)
+    {
+        if ((res = removeAVL(&(*raiz)->dir, valor)) == 1)
+        {
+            if (balanceamentoAVL(*raiz) >= 2)
+            {
+                if (alturaNoAVL((*raiz)->esq->dir) <= alturaNoAVL((*raiz)->esq->esq))
+                    rotacaoLL(raiz);
                 else
-                    RotacaoLR(raiz);
+                    rotacaoLR(raiz);
             }
-	    }
-	}
+        }
+    }
 
-	if((*raiz)->info == valor){
-	    if(((*raiz)->esq == NULL || (*raiz)->dir == NULL)){// nó tem 1 filho ou nenhum
-			struct NO *oldNode = (*raiz);
-			if((*raiz)->esq != NULL)
+    if ((*raiz)->valor == valor)
+    {
+        if (((*raiz)->esq == NULL || (*raiz)->dir == NULL))
+        {
+            No *oldNode = (*raiz);
+            if ((*raiz)->esq != NULL)
                 *raiz = (*raiz)->esq;
             else
                 *raiz = (*raiz)->dir;
-			free(oldNode);
-		}else { // nó tem 2 filhos
-			struct NO* temp = procuraMenor((*raiz)->dir);
-			(*raiz)->info = temp->info;
-			remove_ArvAVL(&(*raiz)->dir, (*raiz)->info);
-            if(fatorBalanceamento_NO(*raiz) >= 2){
-				if(altura_NO((*raiz)->esq->dir) <= altura_NO((*raiz)->esq->esq))
-					RotacaoLL(raiz);
-				else
-					RotacaoLR(raiz);
-			}
-		}
-		if (*raiz != NULL)
-            (*raiz)->altura = maior(altura_NO((*raiz)->esq),altura_NO((*raiz)->dir)) + 1;
-		return 1;
-	}
+            free(oldNode);
+        }
+        else
+        {
+            No *temp = procuraMenor((*raiz)->dir);
+            (*raiz)->valor = temp->valor;
+            removeAVL(&(*raiz)->dir, (*raiz)->valor);
+            if (balanceamentoAVL(*raiz) >= 2)
+            {
+                if (alturaNoAVL((*raiz)->esq->dir) <= alturaNoAVL((*raiz)->esq->esq))
+                    rotacaoLL(raiz);
+                else
+                    rotacaoLR(raiz);
+            }
+        }
+        if (*raiz != NULL)
+            (*raiz)->altura = maior(alturaNoAVL((*raiz)->esq), alturaNoAVL((*raiz)->dir)) + 1;
+        return 1;
+    }
 
-	(*raiz)->altura = maior(altura_NO((*raiz)->esq),altura_NO((*raiz)->dir)) + 1;
+    (*raiz)->altura = maior(alturaNoAVL((*raiz)->esq), alturaNoAVL((*raiz)->dir)) + 1;
 
-	return res;
+    return res;
 }

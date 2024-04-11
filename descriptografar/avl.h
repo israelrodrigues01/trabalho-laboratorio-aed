@@ -1,18 +1,16 @@
 #ifndef AVL_H_INCLUDED
 #define AVL_H_INCLUDED
 
-typedef struct NO* ArvAVL;
+typedef struct NO *AVL;
 
-ArvAVL* cria_ArvAVL();
-void libera_ArvAVL(ArvAVL *raiz);
-int insere_ArvAVL(ArvAVL *raiz, int data);
-int remove_ArvAVL(ArvAVL *raiz, int valor);
-int estaVazia_ArvAVL(ArvAVL *raiz);
-int altura_ArvAVL(ArvAVL *raiz);
-int totalNO_ArvAVL(ArvAVL *raiz);
-int consulta_ArvAVL(ArvAVL *raiz, int valor);
-void preOrdem_ArvAVL(ArvAVL *raiz);
-void emOrdem_ArvAVL(ArvAVL *raiz);
-void posOrdem_ArvAVL(ArvAVL *raiz);
+AVL *criaAVL();
+int deletarAVL(AVL *);
+int insereAVL(AVL *, int valor, char letra);
+int removeAVL(AVL *, int valor);
+int vaziaAVL(AVL *);
+int alturaAVL(AVL *);
+int preOrdemAVL(AVL *);
+int ordemSimetricaAVL(AVL *);
+int posOrdemAVL(AVL *);
 
 #endif // AVL_H_INCLUDED
